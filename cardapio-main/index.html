@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio da Casa</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+    <h1>Cantinho do Sertão</h1>
+    <p>Faça seu pedido pelo cardápio digital!</p>
+</header>
+
+<nav id="categorias">
+    <button onclick="toggleCarrinho()">🛒 Meu Carrinho</button>
+    <button onclick="filtrarCategoria('Café')">Café</button>
+    <button onclick="filtrarCategoria('Almoço')">Almoço</button>
+    <button onclick="filtrarCategoria('Sobremesa')">Sobremesa</button>
+    <button onclick="filtrarCategoria('Bebidas')">Bebidas</button>
+</nav>
+
+<section id="produtos"></section>
+
+<!-- CARRINHO -->
+<section id="carrinho-fixo" class="fechado">
+
+    <div class="topo-carrinho" onclick="toggleCarrinho()">
+        <span id="resumo-itens">0 itens</span>
+        <strong id="resumo-total">R$ 0,00</strong>
+        <span id="seta-carrinho">▲</span>
+    </div>
+
+    <div class="conteudo-carrinho">
+
+        <ul id="lista-carrinho"></ul>
+
+        <div class="campo">
+            <label>Número da mesa</label>
+            <input type="number" id="numeroMesa" placeholder="Ex: 12">
+        </div>
+
+        <div class="campo">
+            <label>Forma de pagamento</label>
+            <select id="forma-pagamento">
+                <option value="">Selecione</option>
+                <option value="Dinheiro">💵 Dinheiro</option>
+                <option value="Débito">💳 Débito</option>
+                <option value="Crédito">💳 Crédito</option>
+                <option value="Pix">📱 Pix</option>
+            </select>
+        </div>
+
+        <button id="btn-finalizar">Finalizar pedido</button>
+    </div>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
