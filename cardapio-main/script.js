@@ -1,54 +1,63 @@
-async function carregarProdutos() {
-
-  
-  const resposta = await fetch("http://localhost:8080/api/produtos/disponiveis")
-  const produtos = await resposta.json()
-
-  
-  const grid = document.getElementById("ID_DO_SEU_GRID")
-  
-  
-  grid.innerHTML = ""
-
- 
-  produtos.forEach(produto => {
-    const card = document.createElement("div")
-    card.className = "CLASSE_DO_SEU_CARD"
-    card.innerHTML = `
-      <h3>${produto.nome_prod}</h3>
-      <p>${produto.descricao_prod ?? ""}</p>
-      <p>R$ ${produto.preco_prod}</p>
-      <button onclick="adicionarCarrinho(
-        ${produto.id_prod},
-        '${produto.nome_prod}',
-        ${produto.preco_prod}
-      )">
-        Adicionar
-      </button>
-    `
-    grid.appendChild(card)
-  })
-}
-
-
-document.addEventListener("DOMContentLoaded", carregarProdutos)
-
 let carrinho = [];
 let categoriaAtual = "Café";
 let formaPagamento = "";
 
+async function carregarProdutos() {
+
+  
+  try {
+
+  const recebdados = await fetch("http://localhost:8080/api/produtos/disponível")
+  const produtos = await recebdados.json()
+  console.log("Dados recebidos:", produtos);
+  
+  // const grid = document.getElementById("produtos")
+  
+  
+  //grid.innerHTML = ""
+   
+  produtos = produtos.map(p => ({
+      id:        p.id_prod,
+      nome:      p.nome_prod,
+      preco:     p.preco_prod,
+      categoria: p.categoria_prod,
+      imagem:    "imagens/" + p.nome_prod.toLowerCase().replace(/ /g, "") + ".jpg"
+    }))
+ 
+    mostrarProdutos();
+
+    } catch (error)
+    
+    {
+        console.error("Erro ao carregar produtos:", error);
+        alert("Não foi possível carregar os produtos. Verifique sua conexão com o servidor!! .");
+    }
+}
+
+
+//document.addEventListener("DOMContentLoaded", carregarProdutos)
+
+
+
 function mostrarProdutos() {
     const grid = document.getElementById("produtos");
     grid.innerHTML = "";
+    
+    const filtrados = produtos.filter(p => p.categoria === categoriaAtual);
+     
+    if (filtrados.length === 0) {
+    grid.innerHTML = "<p>Nenhum produto nessa categoria.</p>";
+    return;
+  }
 
-    produtos
-        .filter(p => p.categoria === categoriaAtual)
-        .forEach(produto => {
+    
+        
+        filtrados.forEach(produto => {
             const card = document.createElement("div");
             card.className = "card";
 
             card.innerHTML = `
-                <img src="${produto.imagem}">
+                <img src="${produto.imagem}" onerror="this.style.display='none'">
                 <h3>${produto.nome}</h3>
                 <p>R$ ${produto.preco.toFixed(2)}</p>
                 <button onclick="adicionar(${produto.id})">Adicionar</button>
@@ -88,7 +97,7 @@ function atualizarCarrinho() {
     const lista = document.getElementById("lista-carrinho");
     lista.innerHTML = "";
 
-    let total = 0;
+    let total = 0
 
     carrinho.forEach(item => {
         total += item.qtd * item.preco;
@@ -137,4 +146,4 @@ function finalizarPedido() {
 
 document.getElementById("btn-finalizar").addEventListener("click", finalizarPedido);
 
-mostrarProdutos();
+carregarProdutos();
