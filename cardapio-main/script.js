@@ -1,5 +1,6 @@
 let carrinho = [];
-let categoriaAtual = "Café";
+let produtos = [];
+let categoriaAtual = "café da manhã";
 let formaPagamento = "";
 
 async function carregarProdutos() {
@@ -7,16 +8,16 @@ async function carregarProdutos() {
   
   try {
 
-  const recebdados = await fetch("http://localhost:8080/api/produtos/disponível")
-  const produtos = await recebdados.json()
-  console.log("Dados recebidos:", produtos);
+  const resposta = await fetch("http://localhost:8080/api/produtos/disponível")
+  const dados = await resposta.json()
+  console.log("Dados recebidos:", dados);
   
   // const grid = document.getElementById("produtos")
   
   
   //grid.innerHTML = ""
    
-  produtos = produtos.map(p => ({
+  produtos = dados.map(p => ({
       id:        p.id_prod,
       nome:      p.nome_prod,
       preco:     p.preco_prod,
@@ -30,7 +31,7 @@ async function carregarProdutos() {
     
     {
         console.error("Erro ao carregar produtos:", error);
-        alert("Não foi possível carregar os produtos. Verifique sua conexão com o servidor!! .");
+        alert("Não foi possível carregar os produtos!!!!!!!!! Verifique sua conexão com o servidor!! .");
     }
 }
 
