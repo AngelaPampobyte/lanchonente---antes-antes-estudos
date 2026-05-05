@@ -125,26 +125,64 @@ function toggleCarrinho() {
         carrinho.classList.contains("aberto") ? "▼" : "▲";
 }
 
-function finalizarPedido() {
+async function finalizarPedido() {
     const mesa = document.getElementById("numeroMesa").value;
     const forma = document.getElementById("forma-pagamento").value;
 
     if (!mesa) return alert("Informe o número da mesa");
     if (!forma) return alert("Selecione a forma de pagamento");
 
-    let texto = `Mesa ${mesa}\n\nPedido:\n`;
-    let total = 0;
+    const pedido = {
 
-    carrinho.forEach(p => {
-        texto += `${p.qtd}x ${p.nome} - R$ ${(p.qtd * p.preco).toFixed(2)}\n`;
-        total += p.qtd * p.preco;
-    });
+   itens: carrinho.map(item => ({
+    produtoId: item.id,
+    quantidade: item.qtd
+    })),
+
+    total: carrinho.reduce((soma, p) => soma + p.qtd * p.preco, 0),
+ 
+    };
+
+
+    try {
+        const resposta =  await fetch("http://localhost:8080/api/pedidos", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(pedido)
+        });
+
+if (resposta.ok) {
+
+let texto = `Mesa ${mesa}\n\nPedido:\n`;
+let total = 0;
+
+carrinho.forEach(p => {
+    texto += `${p.qtd}x ${p.nome} - R$ ${(p.qtd * p.preco).toFixed(2)}\n`;
+    total += p.qtd * p.preco;
+      });
+  
+    //  let texto = `Mesa ${mesa}\n\nPedido:\n`;
+  //  let total = 0;
+
+    // carrinho.forEach(p => {
+     //   texto += `${p.qtd}x ${p.nome} - R$ ${(p.qtd * p.preco).toFixed(2)}\n`;
+     //   total += p.qtd * p.preco;
+   // });
 
     texto += `\nTotal: R$ ${total.toFixed(2)}\nPagamento: ${forma}`;
 
     window.open(`https://wa.me/5511994562789?text=${encodeURIComponent(texto)}`);
-}
+    carrinho = [];
+    atualizarCarrinho();
+ 
+
+    }
+  } catch (error) {
+    alert("Erro ao finalizar pedido. Verifique a conexão com o servidor");
+  }
+ }
+
 
 document.getElementById("btn-finalizar").addEventListener("click", finalizarPedido);
 
-carregarProdutos();
+carregarProdutos()      
