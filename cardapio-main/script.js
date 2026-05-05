@@ -22,6 +22,7 @@ async function carregarProdutos() {
       nome:      p.nome_prod,
       preco:     p.preco_prod,
       categoria: p.categoria_prod,
+      quantidade: p.estoque_prod,
       imagem:    "imagens/" + p.nome_prod.toLowerCase().replace(/ /g, "") + ".jpg"
     }))
  
@@ -61,7 +62,9 @@ function mostrarProdutos() {
                 <img src="${produto.imagem}" onerror="this.style.display='none'">
                 <h3>${produto.nome}</h3>
                 <p>R$ ${produto.preco.toFixed(2)}</p>
+                <p>quantidade: ${produto.quantidade || 0}</p>
                 <button onclick="adicionar(${produto.id})">Adicionar</button>
+                
             `;
             grid.appendChild(card);
         });
@@ -81,7 +84,9 @@ function filtrarCategoria(cat) {
 
 function adicionar(id) {
     const item = carrinho.find(p => p.id === id);
-    if (item) item.qtd++;
+    if (item) alert("Produto adicionado"), item.qtd++;
+     
+
     else carrinho.push({ ...produtos.find(p => p.id === id), qtd: 1 });
     atualizarCarrinho();
 }
@@ -134,9 +139,9 @@ async function finalizarPedido() {
 
     const pedido = {
 
-   itens: carrinho.map(item => ({
-    produtoId: item.id,
-    quantidade: item.qtd
+   itens_pedido: carrinho.map(item => ({
+    id_item: item.id,
+    quantidade_item: item.qtd,
     })),
 
     total: carrinho.reduce((soma, p) => soma + p.qtd * p.preco, 0),
@@ -176,11 +181,17 @@ carrinho.forEach(p => {
     atualizarCarrinho();
  
 
-    }
+    }  else {
+    const erro = await resposta.text();
+    console.log("Erro do servidor:", erro); 
+    alert("Não foi possível finalizar o pedido: " + erro);
+}
   } catch (error) {
     alert("Erro ao finalizar pedido. Verifique a conexão com o servidor");
-  }
- }
+ 
+
+} 
+}
 
 
 document.getElementById("btn-finalizar").addEventListener("click", finalizarPedido);
