@@ -84,7 +84,7 @@ function filtrarCategoria(cat) {
 
 function adicionar(id) {
     const item = carrinho.find(p => p.id === id);
-    if (item) alert("Produto adicionado"), item.qtd++;
+    if (item) item.qtd++; 
      
 
     else carrinho.push({ ...produtos.find(p => p.id === id), qtd: 1 });
@@ -150,13 +150,16 @@ async function finalizarPedido() {
 
 
     try {
-        const resposta =  await fetch("http://localhost:8080/api/pedidos", {
+        const respostaPedido =  await fetch("http://localhost:8080/api/pedidos", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(pedido)
         });
 
-if (resposta.ok) {
+if (respostaPedido.ok) {
+    const pedidoSalvo = await respostaPedido.json();
+    console.log("Pedido salvo com sucesso:", pedidoSalvo.id);
+    alert("Pedido finalizado com sucesso!");
 
 let texto = `Mesa ${mesa}\n\nPedido:\n`;
 let total = 0;
