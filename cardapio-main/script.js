@@ -136,6 +136,7 @@ async function finalizarPedido() {
 
     if (!mesa) return alert("Informe o número da mesa");
     if (!forma) return alert("Selecione a forma de pagamento");
+    if (carrinho.length === 0) return alert("Carrinho vazio!"); 
 
     const pedido = {
 
@@ -156,10 +157,9 @@ async function finalizarPedido() {
             body: JSON.stringify(pedido)
         });
 
-if (respostaPedido.ok) {
-    const pedidoSalvo = await respostaPedido.json();
-    console.log("Pedido salvo com sucesso:", pedidoSalvo.id);
-    alert("Pedido finalizado com sucesso!");
+     if (respostaPedido.ok) {
+       const pedidoSalvo = await respostaPedido.json();
+       alert("Pedido finalizado com sucesso!");
 
 let texto = `Mesa ${mesa}\n\nPedido:\n`;
 let total = 0;
@@ -185,13 +185,13 @@ carrinho.forEach(p => {
  
 
     }  else {
-    const erro = await resposta.text();
+    const erro = await respostaPedido.text();
     console.log("Erro do servidor:", erro); 
     alert("Não foi possível finalizar o pedido: " + erro);
 }
   } catch (error) {
     alert("Erro ao finalizar pedido. Verifique a conexão com o servidor");
- 
+    console.log("Erro do servidor:", error); 
 
 } 
 }
