@@ -143,14 +143,17 @@ async function finalizarPedido() {
    itens_pedido: carrinho.map(item => ({
     id_item: item.id,
     quantidade_item: item.qtd,
+    preco_item: item.preco,
     })),
 
-    total: carrinho.reduce((soma, p) => soma + p.qtd * p.preco, 0),
+    valor_total: carrinho.reduce((soma, p) => soma + p.qtd * p.preco, 0),
  
     };
 
 
     try {
+        //temporario
+        console.log("Pedido enviado:", JSON.stringify(pedido));
         const respostaPedido =  await fetch("http://localhost:8080/api/pedidos", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
