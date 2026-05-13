@@ -122,6 +122,18 @@ function atualizarCarrinho() {
         "R$ " + total.toFixed(2);
 }
 
+
+function toggleFiado() {
+const forma = document.getElementById("forma-pagamento");
+
+const fiado = document.getElementById("fiado-options");
+
+opcao.style.display = forma === "Fiado" ? "block" : "none";
+
+
+}
+
+
 function toggleCarrinho() {
     const carrinho = document.getElementById("carrinho-fixo");
     carrinho.classList.toggle("aberto");
@@ -138,17 +150,40 @@ async function finalizarPedido() {
     if (!forma) return alert("Selecione a forma de pagamento");
     if (carrinho.length === 0) return alert("Carrinho vazio!"); 
 
+    let clienteId = null;
+
+    if (forma === "Fiado") {
+     const nome_cliente = document.getElementById("nome-clientepd").value;
+     const whatsapp_cliente = document.getElementById("whatsapp-clientepd").value;
+        if (!nome_cliente) return alert ("Por favor, informe o nome corretamente para cadastro");
+        if (!whatsapp_cliente) return alert ("Por favor, informe o WhatsApp corretamente para cadastro");
+       
+       const respostaCliente = await fetch("http://localhost:8080/api/clientes", {
+       method: "POST",
+       headers: { "Content-Type": "application/json" },
+       body: JSON.stringify({ nome_cliente, whatsapp_cliente })
+        
+    });
+
+    if (!respostaCliente.ok) return alert("Não foi possível finalizar o cadastro, erro");
+
+
+    const clienteCadastrado = await respostaCliente.json();
+    const clienteId = clienteCadastrado.id;
+    }
+
     const pedido = {
 
    itens_pedido: carrinho.map(item => ({
     id_item: item.id,
     quantidade_item: item.qtd,
     preco_item: item.preco,
-   
+    
     })),
 
     valor_total: carrinho.reduce((soma, p) => soma + p.qtd * p.preco, 0),
- 
+    ClienteId: ClienteId,
+
     };
 
 

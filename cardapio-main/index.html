@@ -42,16 +42,31 @@
             <input type="number" id="numeroMesa" placeholder="Ex: 12">
         </div>
 
-        <div class="campo">
-            <label>Forma de pagamento</label>
-            <select id="forma-pagamento">
-                <option value="">Selecione</option>
-                <option value="Dinheiro">💵 Dinheiro</option>
-                <option value="Débito">💳 Débito</option>
-                <option value="Crédito">💳 Crédito</option>
-                <option value="Pix">📱 Pix</option>
-            </select>
-        </div>
+     <div id="opcao-fiado" style="display:none">
+         <div class="campo">
+         <label>Nome (para fiado)</label>
+          <input type="text" id="nome-fiado" placeholder="Ex: Prof. Carlos">
+          </div>
+         <div class="campo">
+           <label>WhatsApp (para fiado)</label>
+         <input type="text" id="whatsapp-fiado" placeholder="Ex: 11999998888">
+         </div>
+     </div>
+
+  <div class="campo">
+    <label>Forma de pagamento</label>
+    <select id="forma-pagamento" onchange="toggleFiado()">
+        <option value="">Selecione</option>
+        <option value="Dinheiro">💵 Dinheiro</option>
+        <option value="Débito">💳 Débito</option>
+        <option value="Crédito">💳 Crédito</option>
+        <option value="Pix">📱 Pix</option>
+        <option value="Fiado">📋 Pagar depois</option>
+    </select>
+</div>
+        
+          
+
 
         <button id="btn-finalizar">Finalizar pedido</button>
     </div>
