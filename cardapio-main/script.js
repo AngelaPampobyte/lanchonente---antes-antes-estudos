@@ -144,6 +144,7 @@ async function finalizarPedido() {
     id_item: item.id,
     quantidade_item: item.qtd,
     preco_item: item.preco,
+   
     })),
 
     valor_total: carrinho.reduce((soma, p) => soma + p.qtd * p.preco, 0),
@@ -190,7 +191,7 @@ carrinho.forEach(p => {
     }  else {
     const erro = await respostaPedido.text();
     console.log("Erro do servidor:", erro); 
-    alert("Não foi possível finalizar o pedido: " + erro);
+    alert(erro || "erro ao finalizar pedido.");
 }
   } catch (error) {
     alert("Erro ao finalizar pedido. Verifique a conexão com o servidor");
